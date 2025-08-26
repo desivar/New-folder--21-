@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Sunday Church Trip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #6ab7ff, #c5e3ff);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            transition: background 1.5s ease;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #5D4037;
+            margin-bottom: 20px;
+            font-size: 2.8rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: 800;
+        }
+        
+        .question {
+            background-color: #FFD54F;
+            padding: 18px 35px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            font-size: 1.7rem;
+            color: #5D4037;
+            display: inline-block;
+            transform: rotate(-2deg);
+            font-weight: bold;
+            border: 3px solid #FFB300;
+        }
+        
+        .interactive-area {
+            background-color: rgba(255, 255, 255, 0.92);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            min-height: 550px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .instructions {
+            margin: 20px 0;
+            color: #5D4037;
+            font-size: 1.3rem;
+            min-height: 65px;
+            font-weight: 600;
+        }
+        
+        /* Items styling */
+        .items-container {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .item {
+            width: 110px;
+            height: 110px;
+            border-radius: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .keys {
+            background: linear-gradient(to bottom, #FFD54F, #FF8F00);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: rotate(-15deg);
+        }
+        
+        .purse {
+            background: linear-gradient(to bottom, #EC407A, #AD1457);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: rotate(10deg);
+        }
+        
+        .phone {
+            background: linear-gradient(to bottom, #5C6BC0, #283593);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: rotate(-5deg);
+        }
+        
+        .item-icon {
+            font-size: 45px;
+            color: white;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+        }
+        
+        .item-text {
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+        
+        /* Collection bag */
+        .collection-bag {
+            width: 180px;
+            height: 180px;
+            margin: 20px auto;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .bag-icon {
+            font-size: 100px;
+            color: #8D6E63;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .collected-items {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+        }
+        
+        .collected-item {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .collected-item.show {
+            font-size: 30px;
+            opacity: 1;
+            margin: 5px;
+        }
+        
+        /* Hand animation */
+        .hand-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .hand {
+            font-size: 45px;
+            transform: rotate(45deg);
+            color: #5D4037;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.4));
+        }
+        
+        /* Car and road */
+        .road {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: #78909C;
+            border-top: 5px dashed #E0E0E0;
+        }
+        
+        .car-container {
+            position: absolute;
+            bottom: 75px;
+            left: -200px;
+            transition: left 5s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        
+        .car {
+            width: 160px;
+            height: 85px;
+            background: linear-gradient(to bottom, #F44336, #C62828);
+            border-radius: 22px 45px 18px 18px;
+            position: relative;
+        }
+        
+        .car-window {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            width: 55px;
+            height: 28px;
+            background: linear-gradient(to bottom, #E3F2FD, #BBDEFB);
+            border-radius: 12px;
+        }
+        
+        .car-window.back {
+            left: auto;
+            right: 18px;
+        }
+        
+        .car-wheel {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: radial-gradient(circle at 30% 30%, #212121, #000);
+            border-radius: 50%;
+            bottom: -17px;
+            border: 3px solid #757575;
+        }
+        
+        .car-wheel.front {
+            left: 32px;
+        }
+        
+        .car-wheel.back {
+            right: 32px;
+        }
+        
+        /* Church */
+        .church {
+            position: absolute;
+            bottom: 50px;
+            right: 60px;
+            opacity: 0;
+            transition: all 1.2s ease;
+            transform: translateY(20px);
+        }
+        
+        .church-building {
+            width: 120px;
+            height: 140px;
+            background: linear-gradient(to bottom, #EEEEEE, #9E9E9E);
+            position: relative;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .church-roof {
+            position: absolute;
+            top: -30px;
+            left: -10px;
+            width: 140px;
+            height: 40px;
+            background: linear-gradient(to bottom, #B71C1C, #7F0000);
+            clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+        }
+        
+        .church-door {
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to bottom, #5D4037, #3E2723);
+            position: absolute;
+            bottom: 0;
+            left: 40px;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .church-door-handle {
+            width: 6px;
+            height: 6px;
+            background-color: #FFD54F;
+            border-radius: 50%;
+            position: absolute;
+            right: 8px;
+        }
+        
+        .church-cross {
+            position: absolute;
+            top: -55px;
+            left: 60px;
+            font-size: 35px;
+            color: #FFD54F;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .church-window {
+            width: 20px;
+            height: 30px;
+            background: linear-gradient(to bottom, #E1F5FE, #81D4FA);
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            border-radius: 5px;
+            border: 2px solid #5D4037;
+        }
+        
+        .church-window.right {
+            left: auto;
+            right: 20px;
+        }
+        
+        /* Completion message */
+        .completion {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(to bottom, #C8E6C9, #A5D6A7);
+            border-radius: 18px;
+            color: #2E7D32;
+            font-size: 1.4rem;
+            opacity: 0;
+            transform: translateY(25px);
+            transition: all 1s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #81C784;
+        }
+        
+        /* Clicked state */
+        .clicked {
+            transform: scale(1.25) rotate(0deg) !important;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        
+        .item.clicked .item-icon {
+            transform: scale(1.3);
+        }
+        
+        /* Collected items */
+        .collected {
+            opacity: 0.4;
+            transform: scale(0.85);
+            cursor: default;
+            filter: grayscale(0.5);
+        }
+        
+        /* Animation for items when clicked */
+        @keyframes clickAnimation {
+            0% { transform: scale(1) rotate(var(--initial-rotation)); }
+            50% { transform: scale(1.3) rotate(0deg); }
+            100% { transform: scale(1) rotate(var(--initial-rotation)); }
+        }
+        
+        .clicked {
+            animation: clickAnimation 0.6s ease;
+        }
+        
+        /* Hand animation */
+        @keyframes grabItem {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(10deg); }
+            40% { transform: translate(-50%, -50%) scale(1) rotate(-5deg); }
+            60% { transform: translate(-50%, -50%) scale(1) rotate(5deg); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(-10deg); }
+        }
+        
+        .hand-animation {
+            animation: grabItem 1.8s ease forwards;
+        }
+        
+        /* Bounce animation for instructions */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        /* Reset button */
+        .reset-btn {
+            background: linear-gradient(to bottom, #FF9800, #EF6C00);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: 2px solid #E65100;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        
+        .reset-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Clouds */
+        .cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+            opacity: 0.9;
+            z-index: 1;
+        }
+        
+        .cloud-1 {
+            width: 90px;
+            height: 45px;
+            top: 50px;
+            left: 10%;
+            opacity: 0.9;
+            animation: float 25s infinite linear;
+        }
+        
+        .cloud-2 {
+            width: 110px;
+            height: 55px;
+            top: 80px;
+            right: 15%;
+            opacity: 0.95;
+            animation: float 30s infinite linear reverse;
+        }
+        
+        .cloud-3 {
+            width: 70px;
+            height: 35px;
+            top: 120px;
+            left: 25%;
+            opacity: 0.8;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(30px); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* Sun/Moon */
+        .sun-moon {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #FFEB3B, #FBC02D);
+            box-shadow: 0 0 20px #FFEB3B;
+            transition: all 2s ease;
+            z-index: 2;
+        }
+        
+        /* Stars (for night) */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .items-container {
+                gap: 20px;
+            }
+            
+            .item {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .item-icon {
+                font-size: 35px;
+            }
+            
+            .question {
+                font-size: 1.3rem;
+                padding: 15px 25px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .instructions {
+                font-size: 1.1rem;
+            }
+            
+            .collection-bag {
+                transform: scale(0.9);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Sunday Routine</h1>
+        
+        <div class="question">What will I do on Sundays??</div>
+        
+        <div class="interactive-area" id="interactiveArea">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+            
+            <div class="sun-moon" id="sunMoon"></div>
+            
+            <div class="instructions" id="instructions">Click on your keys, purse, and phone to collect them for church!</div>
+            
+            <div class="collection-bag">
+                <div class="bag-icon">👜</div>
+                <div class="collected-items">
+                    <div class="collected-item" id="collectedKeys">🔑</div>
+                    <div class="collected-item" id="collectedPurse">👛</div>
+                    <div class="collected-item" id="collectedPhone">📱</div>
+                </div>
+            </div>
+            
+            <div class="items-container">
+                <div class="item keys" id="keys" style="--initial-rotation: -15deg;">
+                    <div class="item-icon"><i class="fas fa-key"></i></div>
+                    <div class="item-text">KEYS</div>
+                </div>
+                <div class="item purse" id="purse" style="--initial-rotation: 10deg;">
+                    <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
+                    <div class="item-text">PURSE</div>
+                </div>
+                <div class="item phone" id="phone" style="--initial-rotation: -5deg;">
+                    <div class="item-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="item-text">PHONE</div>
+                </div>
+            </div>
+            
+            <div class="hand-container" id="handContainer">
+                <div class="hand">👋</div>
+            </div>
+            
+            <div class="road"></div>
+            
+            <div class="car-container" id="car">
+                <div class="car">
+                    <div class="car-window"></div>
+                    <div class="car-window back"></div>
+                    <div class="car-wheel front"></div>
+                    <div class="car-wheel back"></div>
+                </div>
+            </div>
+            
+            <div class="church" id="church">
+                <div class="church-roof"></div>
+                <div class="church-building">
+                    <div class="church-door">
+                        <div class="church-door-handle"></div>
+                    </div>
+                    <div class="church-window"></div>
+                    <div class="church-window right"></div>
+                </div>
+                <div class="church-cross">✝</div>
+            </div>
+        </div>
+        
+        <div class="completion" id="completionMessage">
+            <i class="fas fa-church"></i> Have a blessed Sunday! See you at church! 🙏
+        </div>
+        
+        <button class="reset-btn" id="resetBtn">
+            <i class="fas fa-redo"></i> Start Again
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const keys = document.getElementById('keys');
+            const purse = document.getElementById('purse');
+            const phone = document.getElementById('phone');
+            const car = document.getElementById('car');
+            const church = document.getElementById('church');
+            const instructions = document.getElementById('instructions');
+            const completionMessage = document.getElementById('completionMessage');
+            const resetBtn = document.getElementById('resetBtn');
+            const handContainer = document.getElementById('handContainer');
+            const collectedKeys = document.getElementById('collectedKeys');
+            const collectedPurse = document.getElementById('collectedPurse');
+            const collectedPhone = document.getElementById('collectedPhone');
+            const sunMoon = document.getElementById('sunMoon');
+            
+            let keysCollected = false;
+            let purseCollected = false;
+            let phoneCollected = false;
+            let journeyStarted = false;
+            
+            // Function to play sound
+            function playSound(frequency, duration, volume) {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    gainNode.gain.value = volume;
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    
+                    oscillator.start();
+                    
+                    gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + duration);
+                    
+                    setTimeout(function() {
+                        oscillator.stop();
+                    }, duration * 1000);
+                } catch (e) {
+                    console.log("Audio context not supported");
+                }
+            }
+            
+            // Function to animate hand grabbing an item
+            function animateHandGrab(item, callback) {
+                const rect = item.getBoundingClientRect();
+                const areaRect = document.getElementById('interactiveArea').getBoundingClientRect();
+                
+                const x = rect.left + rect.width/2 - areaRect.left;
+                const y = rect.top + rect.height/2 - areaRect.top;
+                
+                handContainer.style.left = x + 'px';
+                handContainer.style.top = y + 'px';
+                handContainer.classList.add('hand-animation');
+                
+                // Play grab sound
+                playSound(523.25, 0.3, 0.3); // C note
+                
+                setTimeout(() => {
+                    handContainer.classList.remove('hand-animation');
+                    if (callback) callback();
+                }, 1800);
+            }
+            
+            // Add click events to items
+            function setupItemClick(item, type) {
+                item.addEventListener('click', function() {
+                    if ((type === 'keys' && !keysCollected) || 
+                        (type === 'purse' && !purseCollected) || 
+                        (type === 'phone' && !phoneCollected)) {
+                        
+                        // Animate hand grabbing the item
+                        animateHandGrab(item, function() {
+                            item.classList.add('collected');
+                            
+                            if (type === 'keys') {
+                                keysCollected = true;
+                                collectedKeys.classList.add('show');
+                                instructions.textContent = "Great! Now click your purse!";
+                                instructions.classList.add('bounce');
+                                playSound(659.25, 0.5, 0.2); // E note
+                            } else if (type === 'purse') {
+                                purseCollected = true;
+                                collectedPurse.classList.add('show');
+                                instructions.textContent = "Awesome! Now click your phone!";
+                                playSound(783.99, 0.5, 0.2); // G note
+                            } else if (type === 'phone') {
+                                phoneCollected = true;
+                                collectedPhone.classList.add('show');
+                                instructions.textContent = "Perfect! Now you're ready to go to church!";
+                                playSound(1046.50, 0.5, 0.2); // C note
+                            }
+                            
+                            // Update background based on progress
+                            updateBackground();
+                            
+                            // If all items are collected, start the car journey
+                            if (keysCollected && purseCollected && phoneCollected && !journeyStarted) {
+                                journeyStarted = true;
+                                
+                                setTimeout(function() {
+                                    instructions.textContent = "And we're off to church!";
+                                    playSound(1318.51, 0.7, 0.3); // E note
+                                    
+                                    setTimeout(function() {
+                                        car.style.left = 'calc(100% - 200px)';
+                                        playSound(1567.98, 5, 0.1); // G note
+                                        
+                                        setTimeout(function() {
+                                            church.style.opacity = '1';
+                                            church.style.transform = 'translateY(0)';
+                                            completionMessage.style.opacity = '1';
+                                            completionMessage.style.transform = 'translateY(0)';
+                                            instructions.textContent = "You've arrived at church! Have a blessed Sunday!";
+                                            playSound(2093.00, 1, 0.4); // C note
+                                        }, 5100);
+                                    }, 1000);
+                                }, 1000);
+                            }
+                            
+                            // Remove the bounce animation after a while
+                            setTimeout(function() {
+                                instructions.classList.remove('bounce');
+                            }, 2000);
+                        });
+                    }
+                });
+            }
+            
+            // Update background based on progress
+            function updateBackground() {
+                const collectedCount = (keysCollected ? 1 : 0) + (purseCollected ? 1 : 0) + (phoneCollected ? 1 : 0);
+                
+                if (collectedCount === 1) {
+                    document.body.style.background = "linear-gradient(to bottom, #5aa0e6, #b3d9ff)";
+                    sunMoon.style.background = "linear-gradient(to bottom, #FFD54F, #FFB300)";
+                    sunMoon.style.boxShadow = "0 0 20px #FFD54F";
+                } else if (collectedCount === 2) {
+                    document.body.style.background = "linear-gradient(to bottom, #4a8cd6, #99c2ff)";
+                    sunMoon.style.background = "linear-gradient(to bottom, #FFB74D, #FF9800)";
+                    sunMoon.style.boxShadow = "0 0 20px #FFB74D";
+                } else if (collectedCount === 3) {
+                    document.body.style.background = "linear-gradient(to bottom, #3a78c6, #80b3ff)";
+                    sunMoon.style.background = "linear-gradient(to bottom, #FFA726, #EF6C00)";
+                    sunMoon.style.boxShadow = "0 0 20px #FFA726";
+                }
+            }
+            
+            setupItemClick(keys, 'keys');
+            setupItemClick(purse, 'purse');
+            setupItemClick(phone, 'phone');
+            
+            // Reset button functionality
+            resetBtn.addEventListener('click', function() {
+                // Play reset sound
+                playSound(392.00, 0.4, 0.3); // G note
+                
+                // Reset variables
+                keysCollected = false;
+                purseCollected = false;
+                phoneCollected = false;
+                journeyStarted = false;
+                
+                // Reset UI
+                [keys, purse, phone].forEach(item => {
+                    item.classList.remove('collected');
+                    item.classList.remove('clicked');
+                    
+                    // Reset individual rotations
+                    if (item.id === 'keys') item.style.transform = 'rotate(-15deg)';
+                    else if (item.id === 'purse') item.style.transform = 'rotate(10deg)';
+                    else if (item.id === 'phone') item.style.transform = 'rotate(-5deg)';
+                });
+                
+                [collectedKeys, collectedPurse, collectedPhone].forEach(item => {
+                    item.classList.remove('show');
+                });
+                
+                car.style.left = '-200px';
+                church.style.opacity = '0';
+                church.style.transform = 'translateY(20px)';
+                completionMessage.style.opacity = '0';
+                completionMessage.style.transform = 'translateY(25px)';
+                
+                // Reset background
+                document.body.style.background = "linear-gradient(to bottom, #6ab7ff, #c5e3ff)";
+                sunMoon.style.background = "linear-gradient(to bottom, #FFEB3B, #FBC02D)";
+                sunMoon.style.boxShadow = "0 0 20px #FFEB3B";
+                
+                instructions.textContent = "Click on your keys, purse, and phone to collect them for church!";
+                instructions.classList.remove('bounce');
+            });
+            
+            // Add hover effects
+            const items = [keys, purse, phone];
+            items.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('collected')) {
+                        this.style.transform = 'scale(1.15) rotate(0deg)';
+                        playSound(261.63, 0.1, 0.1); // C note
+                    }
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('collected')) {
+                        if (this.id === 'keys') this.style.transform = 'rotate(-15deg)';
+                        else if (this.id === 'purse') this.style.transform = 'rotate(10deg)';
+                        else if (this.id === 'phone') this.style.transform = 'rotate(-5deg)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

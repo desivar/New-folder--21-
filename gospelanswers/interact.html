@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Sunday Church Trip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #5D4037;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .question {
+            background-color: #FFD54F;
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 1.5rem;
+            color: #5D4037;
+            display: inline-block;
+            transform: rotate(-2deg);
+        }
+        
+        .interactive-area {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            min-height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instructions {
+            margin: 20px 0;
+            color: #5D4037;
+            font-size: 1.2rem;
+            min-height: 60px;
+        }
+        
+        /* Items styling */
+        .items-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .item {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .keys {
+            background: linear-gradient(to bottom, #FFD54F, #FFB300);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: rotate(-15deg);
+        }
+        
+        .purse {
+            background: linear-gradient(to bottom, #E91E63, #AD1457);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: rotate(10deg);
+        }
+        
+        .phone {
+            background: linear-gradient(to bottom, #3F51B5, #283593);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: rotate(-5deg);
+        }
+        
+        .item-icon {
+            font-size: 40px;
+            color: white;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .item-text {
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        /* Hand animation */
+        .hand-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .hand {
+            font-size: 40px;
+            transform: rotate(45deg);
+            color: #5D4037;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+        }
+        
+        /* Car and road */
+        .road {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #78909C;
+            border-top: 4px dashed #E0E0E0;
+        }
+        
+        .car-container {
+            position: absolute;
+            bottom: 70px;
+            left: -200px;
+            transition: left 4s ease-in-out;
+        }
+        
+        .car {
+            width: 150px;
+            height: 80px;
+            background: linear-gradient(to bottom, #F44336, #D32F2F);
+            border-radius: 20px 40px 15px 15px;
+            position: relative;
+        }
+        
+        .car-window {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 50px;
+            height: 25px;
+            background-color: #BBDEFB;
+            border-radius: 10px;
+        }
+        
+        .car-window.back {
+            left: auto;
+            right: 15px;
+        }
+        
+        .car-wheel {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #212121;
+            border-radius: 50%;
+            bottom: -15px;
+        }
+        
+        .car-wheel.front {
+            left: 30px;
+        }
+        
+        .car-wheel.back {
+            right: 30px;
+        }
+        
+        /* Church */
+        .church {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        
+        .church-building {
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(to bottom, #E0E0E0, #9E9E9E);
+            position: relative;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .church-door {
+            width: 30px;
+            height: 50px;
+            background-color: #5D4037;
+            position: absolute;
+            bottom: 0;
+            left: 35px;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .church-cross {
+            position: absolute;
+            top: -30px;
+            left: 40px;
+            font-size: 30px;
+            color: #5D4037;
+        }
+        
+        /* Completion message */
+        .completion {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #C8E6C9;
+            border-radius: 15px;
+            color: #2E7D32;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s, transform 1s;
+        }
+        
+        /* Clicked state */
+        .clicked {
+            transform: scale(1.2) rotate(0deg) !important;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+        
+        .item.clicked .item-icon {
+            transform: scale(1.2);
+        }
+        
+        /* Collected items */
+        .collected {
+            opacity: 0.5;
+            transform: scale(0.8);
+            cursor: default;
+        }
+        
+        /* Animation for items when clicked */
+        @keyframes clickAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .clicked {
+            animation: clickAnimation 0.5s ease;
+        }
+        
+        /* Hand animation */
+        @keyframes grabItem {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        }
+        
+        .hand-animation {
+            animation: grabItem 1.5s ease forwards;
+        }
+        
+        /* Bounce animation for instructions */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        /* Reset button */
+        .reset-btn {
+            background: linear-gradient(to bottom, #FF9800, #F57C00);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Clouds */
+        .cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .cloud-1 {
+            width: 80px;
+            height: 40px;
+            top: 50px;
+            left: 10%;
+            opacity: 0.8;
+        }
+        
+        .cloud-2 {
+            width: 100px;
+            height: 50px;
+            top: 80px;
+            right: 15%;
+            opacity: 0.9;
+        }
+        
+        /* Item counter */
+        .item-counter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .counter-item {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .counter-keys {
+            background: linear-gradient(to bottom, #FFD54F, #FFB300);
+        }
+        
+        .counter-purse {
+            background: linear-gradient(to bottom, #E91E63, #AD1457);
+        }
+        
+        .counter-phone {
+            background: linear-gradient(to bottom, #3F51B5, #283593);
+        }
+        
+        .counter-item.collected {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .items-container {
+                gap: 20px;
+            }
+            
+            .item {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .item-icon {
+                font-size: 30px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Sunday Routine</h1>
+        
+        <div class="question">What will I do on Sundays??</div>
+        
+        <div class="interactive-area" id="interactiveArea">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            
+            <div class="instructions" id="instructions">Click on your keys, purse, and phone to collect them for church!</div>
+            
+            <div class="item-counter">
+                <div class="counter-item counter-keys" id="counterKeys">🔑</div>
+                <div class="counter-item counter-purse" id="counterPurse">👛</div>
+                <div class="counter-item counter-phone" id="counterPhone">📱</div>
+            </div>
+            
+            <div class="items-container">
+                <div class="item keys" id="keys">
+                    <div class="item-icon"><i class="fas fa-key"></i></div>
+                    <div class="item-text">KEYS</div>
+                </div>
+                <div class="item purse" id="purse">
+                    <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
+                    <div class="item-text">PURSE</div>
+                </div>
+                <div class="item phone" id="phone">
+                    <div class="item-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="item-text">PHONE</div>
+                </div>
+            </div>
+            
+            <div class="hand-container" id="handContainer">
+                <div class="hand">👋</div>
+            </div>
+            
+            <div class="road"></div>
+            
+            <div class="car-container" id="car">
+                <div class="car">
+                    <div class="car-window"></div>
+                    <div class="car-window back"></div>
+                    <div class="car-wheel front"></div>
+                    <div class="car-wheel back"></div>
+                </div>
+            </div>
+            
+            <div class="church" id="church">
+                <div class="church-building">
+                    <div class="church-door"></div>
+                    <div class="church-cross">✝</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="completion" id="completionMessage">
+            <i class="fas fa-church"></i> Have a blessed Sunday! See you at church! 🙏
+        </div>
+        
+        <button class="reset-btn" id="resetBtn">
+            <i class="fas fa-redo"></i> Start Again
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const keys = document.getElementById('keys');
+            const purse = document.getElementById('purse');
+            const phone = document.getElementById('phone');
+            const car = document.getElementById('car');
+            const church = document.getElementById('church');
+            const instructions = document.getElementById('instructions');
+            const completionMessage = document.getElementById('completionMessage');
+            const resetBtn = document.getElementById('resetBtn');
+            const handContainer = document.getElementById('handContainer');
+            const counterKeys = document.getElementById('counterKeys');
+            const counterPurse = document.getElementById('counterPurse');
+            const counterPhone = document.getElementById('counterPhone');
+            
+            let keysCollected = false;
+            let purseCollected = false;
+            let phoneCollected = false;
+            let journeyStarted = false;
+            
+            // Function to animate hand grabbing an item
+            function animateHandGrab(item, callback) {
+                const rect = item.getBoundingClientRect();
+                const areaRect = document.getElementById('interactiveArea').getBoundingClientRect();
+                
+                const x = rect.left + rect.width/2 - areaRect.left;
+                const y = rect.top + rect.height/2 - areaRect.top;
+                
+                handContainer.style.left = x + 'px';
+                handContainer.style.top = y + 'px';
+                handContainer.classList.add('hand-animation');
+                
+                setTimeout(() => {
+                    handContainer.classList.remove('hand-animation');
+                    if (callback) callback();
+                }, 1500);
+            }
+            
+            // Add click events to items
+            function setupItemClick(item, type) {
+                item.addEventListener('click', function() {
+                    if ((type === 'keys' && !keysCollected) || 
+                        (type === 'purse' && !purseCollected) || 
+                        (type === 'phone' && !phoneCollected)) {
+                        
+                        // Animate hand grabbing the item
+                        animateHandGrab(item, function() {
+                            item.classList.add('collected');
+                            
+                            if (type === 'keys') {
+                                keysCollected = true;
+                                counterKeys.classList.add('collected');
+                                instructions.textContent = "Great! Now click your purse!";
+                                instructions.classList.add('bounce');
+                            } else if (type === 'purse') {
+                                purseCollected = true;
+                                counterPurse.classList.add('collected');
+                                instructions.textContent = "Awesome! Now click your phone!";
+                            } else if (type === 'phone') {
+                                phoneCollected = true;
+                                counterPhone.classList.add('collected');
+                                instructions.textContent = "Perfect! Now you're ready to go to church!";
+                            }
+                            
+                            // If all items are collected, start the car journey
+                            if (keysCollected && purseCollected && phoneCollected && !journeyStarted) {
+                                journeyStarted = true;
+                                
+                                setTimeout(function() {
+                                    instructions.textContent = "And we're off to church!";
+                                    
+                                    setTimeout(function() {
+                                        car.style.left = 'calc(100% - 180px)';
+                                        
+                                        setTimeout(function() {
+                                            church.style.opacity = '1';
+                                            completionMessage.style.opacity = '1';
+                                            completionMessage.style.transform = 'translateY(0)';
+                                            instructions.textContent = "You've arrived at church! Have a blessed Sunday!";
+                                        }, 4100);
+                                    }, 1000);
+                                }, 1000);
+                            }
+                            
+                            // Remove the bounce animation after a while
+                            setTimeout(function() {
+                                instructions.classList.remove('bounce');
+                            }, 2000);
+                        });
+                    }
+                });
+            }
+            
+            setupItemClick(keys, 'keys');
+            setupItemClick(purse, 'purse');
+            setupItemClick(phone, 'phone');
+            
+            // Reset button functionality
+            resetBtn.addEventListener('click', function() {
+                // Reset variables
+                keysCollected = false;
+                purseCollected = false;
+                phoneCollected = false;
+                journeyStarted = false;
+                
+                // Reset UI
+                [keys, purse, phone].forEach(item => {
+                    item.classList.remove('collected');
+                });
+                
+                [counterKeys, counterPurse, counterPhone].forEach(counter => {
+                    counter.classList.remove('collected');
+                });
+                
+                car.style.left = '-200px';
+                church.style.opacity = '0';
+                completionMessage.style.opacity = '0';
+                completionMessage.style.transform = 'translateY(20px)';
+                
+                instructions.textContent = "Click on your keys, purse, and phone to collect them for church!";
+            });
+            
+            // Add hover effects
+            const items = [keys, purse, phone];
+            items.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('collected')) {
+                        this.style.transform = 'scale(1.1) rotate(0deg)';
+                    }
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('collected')) {
+                        if (this.id === 'keys') this.style.transform = 'rotate(-15deg)';
+                        else if (this.id === 'purse') this.style.transform = 'rotate(10deg)';
+                        else if (this.id === 'phone') this.style.transform = 'rotate(-5deg)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

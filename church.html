@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunday Church Trip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #5D4037;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .question {
+            background-color: #FFD54F;
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 1.5rem;
+            color: #5D4037;
+            display: inline-block;
+            transform: rotate(-2deg);
+        }
+        
+        .interactive-area {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            min-height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instructions {
+            margin: 20px 0;
+            color: #5D4037;
+            font-size: 1.2rem;
+            min-height: 60px;
+        }
+        
+        /* Items styling */
+        .items-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .item {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .item:active {
+            cursor: grabbing;
+        }
+        
+        .keys {
+            background: linear-gradient(to bottom, #FFD54F, #FFB300);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: rotate(-15deg);
+        }
+        
+        .purse {
+            background: linear-gradient(to bottom, #E91E63, #AD1457);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: rotate(10deg);
+        }
+        
+        .phone {
+            background: linear-gradient(to bottom, #3F51B5, #283593);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: rotate(-5deg);
+        }
+        
+        .item-icon {
+            font-size: 40px;
+            color: white;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .item-text {
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        /* Drop zone */
+        .drop-zone {
+            width: 200px;
+            height: 140px;
+            border: 3px dashed #78909C;
+            border-radius: 15px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: rgba(236, 239, 241, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.active {
+            background-color: rgba(205, 220, 57, 0.3);
+            border-color: #9E9D24;
+        }
+        
+        .drop-icon {
+            font-size: 40px;
+            color: #78909C;
+            margin-bottom: 10px;
+        }
+        
+        .drop-text {
+            color: #78909C;
+            font-size: 16px;
+        }
+        
+        /* Car and road */
+        .road {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #78909C;
+            border-top: 4px dashed #E0E0E0;
+        }
+        
+        .car-container {
+            position: absolute;
+            bottom: 70px;
+            left: -200px;
+            transition: left 4s ease-in-out;
+        }
+        
+        .car {
+            width: 150px;
+            height: 80px;
+            background: linear-gradient(to bottom, #F44336, #D32F2F);
+            border-radius: 20px 40px 15px 15px;
+            position: relative;
+        }
+        
+        .car-window {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 50px;
+            height: 25px;
+            background-color: #BBDEFB;
+            border-radius: 10px;
+        }
+        
+        .car-window.back {
+            left: auto;
+            right: 15px;
+        }
+        
+        .car-wheel {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #212121;
+            border-radius: 50%;
+            bottom: -15px;
+        }
+        
+        .car-wheel.front {
+            left: 30px;
+        }
+        
+        .car-wheel.back {
+            right: 30px;
+        }
+        
+        /* Church */
+        .church {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        
+        .church-building {
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(to bottom, #E0E0E0, #9E9E9E);
+            position: relative;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .church-door {
+            width: 30px;
+            height: 50px;
+            background-color: #5D4037;
+            position: absolute;
+            bottom: 0;
+            left: 35px;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .church-cross {
+            position: absolute;
+            top: -30px;
+            left: 40px;
+            font-size: 30px;
+            color: #5D4037;
+        }
+        
+        /* Completion message */
+        .completion {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #C8E6C9;
+            border-radius: 15px;
+            color: #2E7D32;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s, transform 1s;
+        }
+        
+        /* Dragging state */
+        .dragging {
+            transform: scale(1.2) rotate(0deg) !important;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+        
+        .item.dragging .item-icon {
+            transform: scale(1.2);
+        }
+        
+        /* Collected items */
+        .collected {
+            opacity: 0.5;
+            transform: scale(0.8);
+            cursor: default;
+        }
+        
+        /* Animation for items when grabbed */
+        @keyframes grabAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .grabbed {
+            animation: grabAnimation 0.5s ease;
+        }
+        
+        /* Bounce animation for instructions */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            width: 80%;
+            height: 20px;
+            background-color: #E0E0E0;
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Reset button */
+        .reset-btn {
+            background: linear-gradient(to bottom, #FF9800, #F57C00);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Clouds */
+        .cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .cloud-1 {
+            width: 80px;
+            height: 40px;
+            top: 50px;
+            left: 10%;
+            opacity: 0.8;
+        }
+        
+        .cloud-2 {
+            width: 100px;
+            height: 50px;
+            top: 80px;
+            right: 15%;
+            opacity: 0.9;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .items-container {
+                gap: 20px;
+            }
+            
+            .item {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .item-icon {
+                font-size: 30px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Sunday Routine</h1>
+        
+        <div class="question">What will I do on Sundays??</div>
+        
+        <div class="interactive-area" id="interactiveArea">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            
+            <div class="instructions" id="instructions">Grab your keys, purse, and phone to start your journey to church!</div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="items-container">
+                <div class="item keys" id="keys" draggable="true">
+                    <div class="item-icon"><i class="fas fa-key"></i></div>
+                    <div class="item-text">KEYS</div>
+                </div>
+                <div class="item purse" id="purse" draggable="true">
+                    <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
+                    <div class="item-text">PURSE</div>
+                </div>
+                <div class="item phone" id="phone" draggable="true">
+                    <div class="item-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="item-text">PHONE</div>
+                </div>
+            </div>
+            
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-icon"><i class="fas fa-hand-holding"></i></div>
+                <div class="drop-text">Drop items here</div>
+            </div>
+            
+            <div class="road"></div>
+            
+            <div class="car-container" id="car">
+                <div class="car">
+                    <div class="car-window"></div>
+                    <div class="car-window back"></div>
+                    <div class="car-wheel front"></div>
+                    <div class="car-wheel back"></div>
+                </div>
+            </div>
+            
+            <div class="church" id="church">
+                <div class="church-building">
+                    <div class="church-door"></div>
+                    <div class="church-cross">✝</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="completion" id="completionMessage">
+            <i class="fas fa-church"></i> Have a blessed Sunday! See you at church! 🙏
+        </div>
+        
+        <button class="reset-btn" id="resetBtn">
+            <i class="fas fa-redo"></i> Start Again
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const keys = document.getElementById('keys');
+            const purse = document.getElementById('purse');
+            const phone = document.getElementById('phone');
+            const car = document.getElementById('car');
+            const church = document.getElementById('church');
+            const instructions = document.getElementById('instructions');
+            const completionMessage = document.getElementById('completionMessage');
+            const interactiveArea = document.getElementById('interactiveArea');
+            const dropZone = document.getElementById('dropZone');
+            const progressBar = document.getElementById('progressBar');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            let keysCollected = false;
+            let purseCollected = false;
+            let phoneCollected = false;
+            let journeyStarted = false;
+            
+            // Make items draggable
+            function setupDrag(item) {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', item.id);
+                    item.classList.add('dragging');
+                    dropZone.classList.add('active');
+                });
+                
+                item.addEventListener('dragend', function() {
+                    item.classList.remove('dragging');
+                    dropZone.classList.remove('active');
+                });
+            }
+            
+            setupDrag(keys);
+            setupDrag(purse);
+            setupDrag(phone);
+            
+            // Drop zone for items
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text/plain');
+                const draggedElement = document.getElementById(id);
+                
+                if (draggedElement && !draggedElement.classList.contains('collected')) {
+                    draggedElement.classList.remove('dragging');
+                    draggedElement.classList.add('grabbed');
+                    draggedElement.classList.add('collected');
+                    
+                    if (id === 'keys') {
+                        keysCollected = true;
+                        instructions.textContent = "Great! Now grab your purse!";
+                        instructions.classList.add('bounce');
+                        progressBar.style.width = '33%';
+                    } else if (id === 'purse') {
+                        purseCollected = true;
+                        instructions.textContent = "Awesome! Now grab your phone!";
+                        progressBar.style.width = '66%';
+                    } else if (id === 'phone') {
+                        phoneCollected = true;
+                        instructions.textContent = "Perfect! Now you're ready to go to church!";
+                        progressBar.style.width = '100%';
+                    }
+                    
+                    // If all items are collected, start the car journey
+                    if (keysCollected && purseCollected && phoneCollected && !journeyStarted) {
+                        journeyStarted = true;
+                        instructions.textContent = "And we're off to church!";
+                        
+                        setTimeout(function() {
+                            car.style.left = 'calc(100% - 180px)';
+                            
+                            setTimeout(function() {
+                                church.style.opacity = '1';
+                                completionMessage.style.opacity = '1';
+                                completionMessage.style.transform = 'translateY(0)';
+                                instructions.textContent = "You've arrived at church! Have a blessed Sunday!";
+                            }, 4100);
+                        }, 1000);
+                    }
+                    
+                    // Remove the bounce animation after a while
+                    setTimeout(function() {
+                        instructions.classList.remove('bounce');
+                    }, 2000);
+                }
+            });
+            
+            // Reset button functionality
+            resetBtn.addEventListener('click', function() {
+                // Reset variables
+                keysCollected = false;
+                purseCollected = false;
+                phoneCollected = false;
+                journeyStarted = false;
+                
+                // Reset UI
+                [keys, purse, phone].forEach(item => {
+                    item.classList.remove('collected');
+                    item.classList.remove('grabbed');
+                });
+                
+                car.style.left = '-200px';
+                church.style.opacity = '0';
+                completionMessage.style.opacity = '0';
+                completionMessage.style.transform = 'translateY(20px)';
+                progressBar.style.width = '0%';
+                
+                instructions.textContent = "Grab your keys, purse, and phone to start your journey to church!";
+            });
+        });
+    </script>
+</body>
+</html>

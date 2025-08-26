@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendiendo del Evangelio / Learning the Gospel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap');
+    </style>
+    <link rel="stylesheet" href="styles/ga.css">
+
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="main-title" id="mainTitle">
+                <i class="fas fa-star-of-david"></i> Aprendiendo del Evangelio <i class="fas fa-star-of-david"></i>
+            </h1>
+            <p class="subtitle" id="subtitle">
+                Descubre cómo recibir revelación personal de nuestro Padre Celestial
+            </p>
+            <button class="language-toggle" onclick="toggleLanguage()" id="langToggle">
+                <i class="fas fa-language"></i> <span>🇺🇸 English</span>
+            </button>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span id="progressStart">Comienza tu viaje</span>
+                <span id="progressComplete">¡Completado!</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="principle-card faith-card" onclick="activateCard('faith')">
+                <span class="card-icon"><i class="fas fa-praying-hands"></i></span>
+                <h2 class="card-title" id="faithTitle">Actuar con Fe</h2>
+                <p class="card-description" id="faithDesc">
+                    Confía en Dios y acude a Él primero a través de la oración sincera
+                </p>
+                <div class="hidden-content" id="faithContent">
+                    <p id="faithDetails">
+                        Cuando oramos con fe sincera, estudiamos las escrituras y obedecemos los mandamientos, 
+                        nuestro Padre Celestial nos enseña línea por línea. ¡Él quiere ayudarnos!
+                    </p>
+                    <a href="https://www.churchofjesuschrist.org/study/manual/gospel-topics/faith" 
+                       class="gospel-library-link" target="_blank" id="faithLink">
+                        <i class="fas fa-book-open"></i> Aprender más sobre la Fe
+                    </a>
+                </div>
+            </div>
+
+            <div class="principle-card eternal-card" onclick="activateCard('eternal')">
+                <span class="card-icon"><i class="fas fa-globe-americas"></i></span>
+                <h2 class="card-title" id="eternalTitle">Ver con Ojos Eternos</h2>
+                <p class="card-description" id="eternalDesc">
+                    Analiza las preguntas desde la perspectiva del Plan de Salvación
+                </p>
+                <div class="hidden-content" id="eternalContent">
+                    <p id="eternalDetails">
+                        Cuando vemos las cosas como nuestro Padre Celestial las ve, podemos entender mejor 
+                        Su plan para nosotros y encontrar respuestas a nuestras preguntas.
+                    </p>
+                    <a href="https://www.churchofjesuschrist.org/study/manual/gospel-topics/plan-of-salvation" 
+                       class="gospel-library-link" target="_blank" id="eternalLink">
+                        <i class="fas fa-rainbow"></i> Plan de Salvación
+                    </a>
+                </div>
+            </div>
+
+            <div class="principle-card sources-card" onclick="activateCard('sources')">
+                <span class="card-icon"><i class="fas fa-bible"></i></span>
+                <h2 class="card-title" id="sourcesTitle">Usar Fuentes Divinas</h2>
+                <p class="card-description" id="sourcesDesc">
+                    Busca respuestas en las escrituras, profetas y el Espíritu Santo
+                </p>
+                <div class="hidden-content" id="sourcesContent">
+                    <p id="sourcesDetails">
+                        Dios nos ha dado fuentes especiales para aprender la verdad: las escrituras, 
+                        los profetas vivientes, y el Espíritu Santo que nos susurra al corazón.
+                    </p>
+                    <a href="https://www.churchofjesuschrist.org/study/scriptures" 
+                       class="gospel-library-link" target="_blank" id="sourcesLink">
+                        <i class="fas fa-scroll"></i> Leer las Escrituras
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="completion-message" id="completionMessage">
+            <h2 class="completion-title" id="completionTitle">
+                <i class="fas fa-award"></i> ¡Felicidades! <i class="fas fa-award"></i>
+            </h2>
+            <p class="completion-text" id="completionText">
+                Has aprendido los tres principios para recibir conocimiento espiritual. 
+                ¡Ahora puedes usar estos principios para hacer preguntas a nuestro Padre Celestial 
+                y recibir Sus respuestas através del Espíritu Santo!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'es';
+        let activeCards = new Set();
+        let totalCards = 3;
+
+        const translations = {
+            es: {
+                mainTitle: '<i class="fas fa-star-of-david"></i> Aprendiendo del Evangelio <i class="fas fa-star-of-david"></i>',
+                subtitle: 'Descubre cómo recibir revelación personal de nuestro Padre Celestial',
+                langToggle: '🇺🇸 English',
+                progressStart: 'Comienza tu viaje',
+                progressComplete: '¡Completado!',
+                faithTitle: 'Actuar con Fe',
+                faithDesc: 'Confía en Dios y acude a Él primero a través de la oración sincera',
+                faithDetails: 'Cuando oramos con fe sincera, estudiamos las escrituras y obedecemos los mandamientos, nuestro Padre Celestial nos enseña línea por línea. ¡Él quiere ayudarnos!',
+                faithLink: '<i class="fas fa-book-open"></i> Aprender más sobre la Fe',
+                eternalTitle: 'Ver con Ojos Eternos',
+                eternalDesc: 'Analiza las preguntas desde la perspectiva del Plan de Salvación',
+                eternalDetails: 'Cuando vemos las cosas como nuestro Padre Celestial las ve, podemos entender mejor Su plan para nosotros y encontrar respuestas a nuestras preguntas.',
+                eternalLink: '<i class="fas fa-rainbow"></i> Plan de Salvación',
+                sourcesTitle: 'Usar Fuentes Divinas',
+                sourcesDesc: 'Busca respuestas en las escrituras, profetas y el Espíritu Santo',
+                sourcesDetails: 'Dios nos ha dado fuentes especiales para aprender la verdad: las escrituras, los profetas vivientes, y el Espíritu Santo que nos susurra al corazón.',
+                sourcesLink: '<i class="fas fa-scroll"></i> Leer las Escrituras',
+                completionTitle: '<i class="fas fa-award"></i> ¡Felicidades! <i class="fas fa-award"></i>',
+                completionText: 'Has aprendido los tres principios para recibir conocimiento espiritual. ¡Ahora puedes usar estos principios para hacer preguntas a nuestro Padre Celestial y recibir Sus respuestas através del Espíritu Santo!'
+            },
+            en: {
+                mainTitle: '<i class="fas fa-star-of-david"></i> Learning the Gospel <i class="fas fa-star-of-david"></i>',
+                subtitle: 'Discover how to receive personal revelation from our Heavenly Father',
+                langToggle: '🇪🇸 Español',
+                progressStart: 'Begin your journey',
+                progressComplete: 'Completed!',
+                faithTitle: 'Act in Faith',
+                faithDesc: 'Trust in God and come to Him first through sincere prayer',
+                faithDetails: 'When we pray with sincere faith, study the scriptures, and obey commandments, our Heavenly Father teaches us line upon line. He wants to help us!',
+                faithLink: '<i class="fas fa-book-open"></i> Learn more about Faith',
+                eternalTitle: 'See with Eternal Eyes',
+                eternalDesc: 'Examine questions from the perspective of the Plan of Salvation',
+                eternalDetails: 'When we see things as our Heavenly Father sees them, we can better understand His plan for us and find answers to our questions.',
+                eternalLink: '<i class="fas fa-rainbow"></i> Plan of Salvation',
+                sourcesTitle: 'Use Divine Sources',
+                sourcesDesc: 'Seek answers in scriptures, prophets, and the Holy Spirit',
+                sourcesDetails: 'God has given us special sources to learn truth: the scriptures, living prophets, and the Holy Spirit that whispers to our hearts.',
+                sourcesLink: '<i class="fas fa-scroll"></i> Read the Scriptures',
+                completionTitle: '<i class="fas fa-award"></i> Congratulations! <i class="fas fa-award"></i>',
+                completionText: 'You have learned the three principles for receiving spiritual knowledge. Now you can use these principles to ask questions to our Heavenly Father and receive His answers through the Holy Spirit!'
+            }
+        };
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.innerHTML = '✨';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function activateCard(cardType) {
+            if (activeCards.has(cardType)) return;
+            
+            activeCards.add(cardType);
+            const card = document.querySelector(`.${cardType}-card`);
+            const content = document.getElementById(`${cardType}Content`);
+            
+            card.classList.add('active');
+            content.classList.add('show');
+            
+            // Add sparkle effect
+            createSparkles(card);
+            
+            // Update progress
+            updateProgress();
+            
+            // Check if all cards are activated
+            if (activeCards.size === totalCards) {
+                setTimeout(() => {
+                    document.body.classList.add('lighting-up');
+                    document.querySelector('.header').classList.add('bright');
+                    showCompletionMessage();
+                }, 1000);
+            }
+        }
+
+        function createSparkles(element) {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.innerHTML = '✨';
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    element.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }, i * 200);
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const percentage = (activeCards.size / totalCards) * 100;
+            progressFill.style.width = percentage + '%';
+            
+            // Update progress label
+            if (percentage === 100) {
+                document.getElementById('progressStart').style.opacity = '0.5';
+                document.getElementById('progressComplete').style.fontWeight = 'bold';
+            }
+        }
+
+        function showCompletionMessage() {
+            setTimeout(() => {
+                document.getElementById('completionMessage').classList.add('show');
+            }, 1500);
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            Object.keys(t).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (key === 'langToggle') {
+                        element.querySelector('span').textContent = t[key];
+                    } else {
+                        element.innerHTML = t[key];
+                    }
+                }
+            });
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = currentLanguage;
+        }
+
+        // Initialize the page
+        window.addEventListener('load', () => {
+            createStars();
+            updateLanguage();
+            
+            // Animate cards on load
+            setTimeout(() => {
+                document.querySelectorAll('.principle-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '0.8';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 200);
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
